@@ -1,0 +1,97 @@
+﻿@page "/call-js-function-jsruntime"
+@using JavaScriptInteraction.Models;
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<div><button type="button" @onclick="CallGlobalFunction">Call Global Classic JS Function</button></div>
+<div><button type="button" @onclick="CallJSModuleFunctionAsync">Call JS Module Function</button></div>
+<div><button type="button" @onclick="CallCollocatedJSModuleFunctionAsync">Call Collocated JS Module Function</button></div>
+<div><button type="button" @onclick="CallPredictableFunctionAsync">Call Predictable Result Function</button> The call result is: @PredictableResult</div>
+<div><button type="button" @onclick="CallUnpredictableFunctionAsync">Call Unpredictable Result Function (Call multiple times to see different results)</button> The call result is: @UnpredictableResult</div>
+<div><button type="button" @onclick="PassObjectDataToFunctionAsync">Pass an Object to Function</button></div>
+<div><button type="button" @onclick="PassReferenceDataToFunctionAsync">Pass a Reference to Function</button></div>
+<div><button type="button" @onclick="PassPrimitiveDataToFunctionAsync">Pass Primitive Parameters to Function</button></div>
+
+@code {
+    private Lazy<IJSObjectReference> JSModule = new();
+    private Lazy<IJSObjectReference> CollocatedModule = new();
+    public string PredictableResult { get; set; } = "";
+    public string UnpredictableResult { get; set; } = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        JSModule = new(await JS.InvokeAsync<IJSObjectReference>("import", "./js/JavaScriptModule.js"));
+        CollocatedModule = new(await JS.InvokeAsync<IJSObjectReference>("import", "./Pages/JSInterop/CallJavaScriptFunction.razor.js"));
+    }
+
+    public void CallGlobalFunction()
+    {
+        InvokeAsync(() => JS.InvokeVoidAsync("HelloBlazorSchool"));
+    }
+
+    public async Task CallJSModuleFunctionAsync()
+    {
+        await JSModule.Value.InvokeVoidAsync("HelloBlazorSchool");
+    }
+
+    public async Task CallCollocatedJSModuleFunctionAsync()
+    {
+        await CollocatedModule.Value.InvokeVoidAsync("HelloBlazorSchool");
+    }
+
+    public async Task CallPredictableFunctionAsync()
+    {
+        PredictableResult = await JSModule.Value.InvokeAsync<string>("PredictableFunction");
+    }
+
+    public async Task CallUnpredictableFunctionAsync()
+    {
+        try
+        {
+            dynamic unpredictableResult = await JSModule.Value.InvokeAsync<dynamic>("UnpredictableFunction");
+            UnpredictableResult = unpredictableResult.ToString();
+        }
+        catch (Exception ex)
+        {
+            UnpredictableResult = ex.Message;
+        }
+    }
+
+    public async Task PassObjectDataToFunctionAsync()
+    {
+        var instanceToPass = new JSInteropExampleClass()
+            {
+                ExampleString = "Blazor School",
+                ExampleInt = 100,
+                ExampleDate = DateTime.Now
+            };
+
+        await JSModule.Value.InvokeVoidAsync("FunctionWithObjectParameter", instanceToPass);
+    }
+
+    public async Task PassReferenceDataToFunctionAsync()
+    {
+        var instanceToPass = new JSInteropExampleClass()
+            {
+                ExampleString = "Blazor School",
+                ExampleInt = 100,
+                ExampleDate = DateTime.Now
+            };
+
+        var wrappedInstance = DotNetObjectReference.Create<JSInteropExampleClass>(instanceToPass);
+        await JSModule.Value.InvokeVoidAsync("FunctionWithReferenceParameter", wrappedInstance);
+    }
+
+    public async Task PassPrimitiveDataToFunctionAsync()
+    {
+        await JSModule.Value.InvokeVoidAsync("FunctionWithPrimitiveParameters", "Blazor School", 5, DateTime.Now);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if(JSModule.IsValueCreated)
+        {
+            await JSModule.Value.DisposeAsync();
+        }
+    }
+}

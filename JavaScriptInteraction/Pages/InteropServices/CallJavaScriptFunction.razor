@@ -1,0 +1,56 @@
+﻿@page "/call-js-function-interopservices"
+@using JavaScriptInteraction.InteropServicesModules;
+@using JavaScriptInteraction.Models;
+@using System.Runtime.InteropServices.JavaScript;
+
+<div><button type="button" @onclick="CallGlobalFunction">Call Global Classic JS Function</button></div>
+<div><button type="button" @onclick="CallJSModuleFunction">Call JS Module Function</button></div>
+<div><button type="button" @onclick="CallGlobalJSModuleFunction">Call Global JS Module Function</button></div>
+<div><button type="button" @onclick="_ => CallCollocatedJSModuleFunction()">Call Collocated JS Module Function</button></div>
+<div><button type="button" @onclick="CallPredictableFunction">Call Predictable Result Function</button> The call result is: @PredictableResult</div>
+<div><button type="button" @onclick="CallUnpredictableFunction">Call Unpredictable Result Function (Not possible)</button> The call result is: @UnpredictableResult</div>
+<div><button type="button" @onclick="PassObjectDataToFunctionAutoMarshalling">Pass an Object to Function (Auto marshalling)</button></div>
+@*
+<div><button type="button" @onclick="PassReferenceDataToFunctionAsync">Pass a Reference to Function</button></div>
+<div><button type="button" @onclick="PassPrimitiveDataToFunctionAsync">Pass Primitive Parameters to Function</button></div>*@
+
+@code {
+    public string PredictableResult { get; set; } = "";
+    public string UnpredictableResult { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await JSHost.ImportAsync("MyModule", "/js/JavaScriptModule.js");
+        await JSHost.ImportAsync("GlobalJSModule", "../Pages/InteropServices/CallJavaScriptFunction.razor.js");
+    }
+
+    public void CallJSModuleFunction()
+    {
+        JavaScriptModule.HelloBlazorSchool();
+    }
+
+    public void CallGlobalFunction()
+    {
+        ClassicJavaScript.HelloBlazorSchool();
+    }
+
+    public void CallGlobalJSModuleFunction()
+    {
+        GlobalJavaScriptModule.HelloBlazorSchool();
+    }
+
+    public void CallPredictableFunction()
+    {
+        PredictableResult = JavaScriptModule.PredictableFunction();
+    }
+
+    public void CallUnpredictableFunction()
+    {
+        UnpredictableResult = JavaScriptModule.UnpredictableFunction();
+    }
+
+    public void PassObjectDataToFunctionAutoMarshalling()
+    {
+        JavaScriptModule.AutoMarshallingFunctionWithPrimitiveParameters("Blazor School", 5, DateTime.Now);
+    }
+}
