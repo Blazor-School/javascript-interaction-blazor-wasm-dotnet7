@@ -59,7 +59,7 @@
 
     public async Task PassObjectDataToFunctionAsync()
     {
-        var instanceToPass = new JSInteropExampleClass()
+        var instanceToPass = new JSRuntimeExampleClass()
             {
                 ExampleString = "Blazor School",
                 ExampleInt = 100,
@@ -71,14 +71,14 @@
 
     public async Task PassReferenceDataToFunctionAsync()
     {
-        var instanceToPass = new JSInteropExampleClass()
+        var instanceToPass = new JSRuntimeExampleClass()
             {
                 ExampleString = "Blazor School",
                 ExampleInt = 100,
                 ExampleDate = DateTime.Now
             };
 
-        var wrappedInstance = DotNetObjectReference.Create<JSInteropExampleClass>(instanceToPass);
+        var wrappedInstance = DotNetObjectReference.Create<JSRuntimeExampleClass>(instanceToPass);
         await JSModule.Value.InvokeVoidAsync("FunctionWithReferenceParameter", wrappedInstance);
     }
 

@@ -1,0 +1,23 @@
+﻿@page "/call-cs-method-interopservices"
+@using JavaScriptInteraction.InteropServicesModules;
+@using JavaScriptInteraction.Models;
+@using System.Runtime.InteropServices.JavaScript;
+
+<div><button type="button" @onclick="CallCSharpMethodByReference">Call a C# Method by Reference</button></div>
+<div><button type="button" onclick="CallAutoMarshalingPrimitiveParameterStaticCSharpMethodAsync()">Call a Static C# Method with Auto Marshalling (See browser console)</button></div>
+<div><button type="button" onclick="CallManualMarshalPrimitiveParameterStaticCSharpMethodAsync()">Call a Static C# Method with Manual Marshal (See browser console)</button></div>
+<div><button type="button" onclick="MarshalFunctionToStaticCSharpMethodAsync()">Call a Static C# Method with Manual Marshal (See browser console)</button></div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await JSHost.ImportAsync("MyModule", "/js/JavaScriptModule.js");
+    }
+
+    public void CallCSharpMethodByReference()
+    {
+        var service = new InteropServiceExampleClass();
+
+        JavaScriptModule.FunctionWithReferenceParameter(service.AddNumber);
+    }
+}

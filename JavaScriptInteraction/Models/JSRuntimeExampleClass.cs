@@ -2,7 +2,7 @@
 
 namespace JavaScriptInteraction.Models;
 
-public class JSInteropExampleClass
+public class JSRuntimeExampleClass
 {
     public string ExampleString { get; set; } = "";
     public int ExampleInt { get; set; }
@@ -28,7 +28,7 @@ public class JSInteropExampleClass
     }
 
     [JSInvokable("MethodWithReferenceParameters")]
-    public void ExampleReferenceParameterizedMethod(JSInteropExampleClass instance)
+    public void ExampleReferenceParameterizedMethod(JSRuntimeExampleClass instance)
     {
         ExampleString = instance.ExampleString;
         ExampleInt = instance.ExampleInt;
@@ -42,5 +42,5 @@ public class JSInteropExampleClass
     public (string, int) ExampleToupleReturnMethod() => (ExampleString, ExampleInt);
 
     [JSInvokable]
-    public JSInteropExampleClass ExampleReferenceReturnMethod() => this;
+    public JSRuntimeExampleClass ExampleReferenceReturnMethod() => this;
 }

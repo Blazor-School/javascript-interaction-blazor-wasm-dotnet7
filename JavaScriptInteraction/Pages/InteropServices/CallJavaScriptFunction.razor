@@ -9,10 +9,9 @@
 <div><button type="button" @onclick="_ => CallCollocatedJSModuleFunction()">Call Collocated JS Module Function</button></div>
 <div><button type="button" @onclick="CallPredictableFunction">Call Predictable Result Function</button> The call result is: @PredictableResult</div>
 <div><button type="button" @onclick="CallUnpredictableFunction">Call Unpredictable Result Function (Not possible)</button> The call result is: @UnpredictableResult</div>
-<div><button type="button" @onclick="PassObjectDataToFunctionAutoMarshalling">Pass an Object to Function (Auto marshalling)</button></div>
-@*
-<div><button type="button" @onclick="PassReferenceDataToFunctionAsync">Pass a Reference to Function</button></div>
-<div><button type="button" @onclick="PassPrimitiveDataToFunctionAsync">Pass Primitive Parameters to Function</button></div>*@
+<div><button type="button" @onclick="PassPrimitiveDataToFunctionAutoMarshalling">Pass Primitive Parameters to Function (Auto marshalling)</button></div>
+<div><button type="button" @onclick="PassPrimitiveDataToFunctionMarshalManually">Pass Primitive Parameters to Function (Marshal manually)</button></div>
+<div><button type="button" @onclick="PassCSharpMethodToFunction">Pass a C# Method to Function</button></div>
 
 @code {
     public string PredictableResult { get; set; } = "";
@@ -49,8 +48,20 @@
         UnpredictableResult = JavaScriptModule.UnpredictableFunction();
     }
 
-    public void PassObjectDataToFunctionAutoMarshalling()
+    public void PassPrimitiveDataToFunctionAutoMarshalling()
     {
-        JavaScriptModule.AutoMarshallingFunctionWithPrimitiveParameters("Blazor School", 5, DateTime.Now);
+        JavaScriptModule.AutoMarshallingFunctionWithPrimitiveParameters("Blazor School", 5, false);
+    }
+
+    public void PassPrimitiveDataToFunctionMarshalManually()
+    {
+        JavaScriptModule.ManualMarshalToFunctionWithPrimitiveParameters("Blazor School", 5, DateTime.Now);
+    }
+
+    public void PassCSharpMethodToFunction()
+    {
+        var service = new InteropServiceExampleClass();
+
+        JavaScriptModule.FunctionWithReferenceParameter(service.AddNumber);
     }
 }

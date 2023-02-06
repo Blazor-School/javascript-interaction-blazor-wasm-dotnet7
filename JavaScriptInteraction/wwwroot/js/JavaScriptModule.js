@@ -1,6 +1,6 @@
 ﻿export function HelloBlazorSchool()
 {
-	alert("Hello Blazor School!");
+    alert("Hello Blazor School!");
 }
 
 export function PredictableFunction()
@@ -77,14 +77,18 @@ export async function CallPrimitiveDataReturnMethod(csharpObject)
     alert(`The result is ${result}`);
 }
 
-export async function CallToupleDataReturnMethod(csharpObject)
-{
-    let result = await csharpObject.invokeMethodAsync("ExampleToupleReturnMethod");
-    console.info(result);
-}
-
 export async function CallReferenceDataReturnMethod(csharpObject)
 {
     let result = await csharpObject.invokeMethodAsync("ExampleReferenceReturnMethod");
     alert(`Received object data: string ${result.exampleString}, number ${result.exampleInt}, date time ${result.exampleDate}`)
+}
+
+export function FunctionWithAutoMarshallingParameters(stringData, numberData, booleanData)
+{
+    alert(`Received object data: string ${stringData}, number ${numberData}, boolean ${booleanData}`);
+}
+
+export function FunctionWithMethodParameter(csharpMethod)
+{
+    alert(`Using C# method to calculate 1 + 2. Result: ${csharpMethod(1, 2)}`);
 }
