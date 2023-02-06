@@ -20,3 +20,9 @@ async function MarshalFunctionToStaticCSharpMethodAsync()
     let rootAssembly = await globalThis.getDotnetRuntime(0).getAssemblyExports("JavaScriptInteraction.dll");
     rootAssembly.JavaScriptInteraction.InteropServicesModules.JavaScriptModule.MarshalFunctionToMethod(HelloBlazorSchool);
 }
+
+async function callStaticLocalComponentMethod()
+{
+    let result = await DotNet.invokeMethodAsync("JavaScriptInteraction", "LocalStaticMethod");
+    alert(result);
+}

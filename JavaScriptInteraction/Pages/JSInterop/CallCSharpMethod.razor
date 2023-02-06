@@ -1,0 +1,93 @@
+﻿@page "/call-cs-method-jsruntime"
+@using JavaScriptInteraction.Models
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<h3>CallCSharp</h3>
+<div>String data: @ExampleInstance.ExampleString</div>
+<div>Number data: @ExampleInstance.ExampleInt</div>
+<div>Date data: @ExampleInstance.ExampleDate</div>
+<button class="btn btn-primary" @onclick="CallSynchronousMethodAsync">Call Synchronous Method</button>
+<button class="btn btn-primary" @onclick="CallAsynchronousMethodAsync">Call Asynchronous Method</button>
+<button class="btn btn-primary" onclick="callStaticLocalComponentMethod()">Call Local Static Method</button>
+<button class="btn btn-primary" @onclick="CallLocalComponentMethod">Call Local Component Method</button>
+<button class="btn btn-primary" @onclick="CallMethodWithPrimitiveParameters">Call Primitive Parameterized Method</button>
+<button class="btn btn-primary" @onclick="CallMethodWithReferenceParameters">Call Reference Parameterized Method</button>
+<button class="btn btn-primary" @onclick="HandlePrimitiveDataReturnMethod">Handle Primitive Data Return Method</button>
+<button class="btn btn-primary" @onclick="HandleReferenceDataReturnMethod">Handle Reference Data Return Method</button>
+@code {
+    private Lazy<IJSObjectReference> ExampleModule = new();
+    private static JSRuntimeExampleClass ExampleInstance { get; set; } = new()
+        {
+            ExampleDate = DateTime.Now,
+            ExampleInt = 100,
+            ExampleString = Guid.NewGuid().ToString()
+        };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ExampleModule = new(await JS.InvokeAsync<IJSObjectReference>("import", "./js/JavaScriptModule.js"));
+        }
+    }
+
+    public async Task CallSynchronousMethodAsync()
+    {
+        var wrappedInstance = DotNetObjectReference.Create(ExampleInstance);
+        await ExampleModule.Value.InvokeVoidAsync("CallSynchronousCSharpMethod", wrappedInstance);
+    }
+
+    public async Task CallAsynchronousMethodAsync()
+    {
+        var wrappedInstance = DotNetObjectReference.Create(ExampleInstance);
+        await ExampleModule.Value.InvokeVoidAsync("CallAsynchronousCSharpMethod", wrappedInstance);
+    }
+
+    public async Task CallLocalComponentMethod()
+    {
+        var wrappedInstance = DotNetObjectReference.Create(this);
+        await ExampleModule.Value.InvokeVoidAsync("CallLocalComponentMethod", wrappedInstance);
+    }
+
+    public async Task CallMethodWithPrimitiveParameters()
+    {
+        var wrappedInstance = DotNetObjectReference.Create(ExampleInstance);
+        await ExampleModule.Value.InvokeVoidAsync("CallPrimitiveParameterizedCSharpMethod", wrappedInstance);
+    }
+
+    public async Task CallMethodWithReferenceParameters()
+    {
+        var wrappedInstance = DotNetObjectReference.Create(ExampleInstance);
+        await ExampleModule.Value.InvokeVoidAsync("CallReferenceParameterizedCSharpMethod", wrappedInstance);
+    }
+
+    [JSInvokable]
+    public void LocalMethod()
+    {
+        ExampleInstance.ExampleString = $"{nameof(LocalMethod)} called";
+    }
+
+    [JSInvokable]
+    public static string LocalStaticMethod() => $"{nameof(LocalStaticMethod)} called";
+
+    public async Task HandlePrimitiveDataReturnMethod()
+    {
+        var wrappedInstance = DotNetObjectReference.Create(ExampleInstance);
+        await ExampleModule.Value.InvokeVoidAsync("CallPrimitiveDataReturnMethod", wrappedInstance);
+    }
+
+    public async Task HandleReferenceDataReturnMethod()
+    {
+        var wrappedInstance = DotNetObjectReference.Create(ExampleInstance);
+        await ExampleModule.Value.InvokeVoidAsync("CallReferenceDataReturnMethod", wrappedInstance);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (ExampleModule.IsValueCreated)
+        {
+            await ExampleModule.Value.DisposeAsync();
+        }
+    }
+}
