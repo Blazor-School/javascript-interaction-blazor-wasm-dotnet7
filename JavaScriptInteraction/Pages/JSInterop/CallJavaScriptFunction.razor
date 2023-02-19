@@ -93,5 +93,10 @@
         {
             await JSModule.Value.DisposeAsync();
         }
+        
+        if (CollocatedModule.IsValueCreated)
+        {
+            await CollocatedModule.Value.DisposeAsync();
+        }
     }
 }
