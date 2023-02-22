@@ -6,6 +6,6 @@ namespace JavaScriptInteraction.Pages.InteropServices;
 [SupportedOSPlatform("browser")]
 public partial class CallJavaScriptFunction
 {
-    [JSImport("HelloBlazorSchool", "GlobalJSModule")]
+    [JSImport("HelloBlazorSchool", "Collocated Module")]
     static partial void CallCollocatedJSModuleFunction();
 }
