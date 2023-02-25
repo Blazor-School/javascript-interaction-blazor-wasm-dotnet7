@@ -10,6 +10,8 @@ namespace JavaScriptInteraction.InteropServicesModules;
 [SupportedOSPlatform("browser")]
 public partial class JavaScriptModule
 {
+    public static async Task ImportModuleAsync() => await JSHost.ImportAsync("MyModule", "/js/JavaScriptModule.js");
+
     [JSImport("HelloBlazorSchool", "MyModule")]
     public static partial void HelloBlazorSchool();
 

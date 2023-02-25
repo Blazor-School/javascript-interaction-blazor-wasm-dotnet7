@@ -6,12 +6,12 @@
 <div><button type="button" @onclick="CallCSharpMethodByReference">Call a C# Method by Reference</button></div>
 <div><button type="button" onclick="CallAutoMarshalingPrimitiveParameterStaticCSharpMethodAsync()">Call a Static C# Method with Auto Marshalling (See browser console)</button></div>
 <div><button type="button" onclick="CallManualMarshalPrimitiveParameterStaticCSharpMethodAsync()">Call a Static C# Method with Manual Marshal (See browser console)</button></div>
-<div><button type="button" onclick="MarshalFunctionToStaticCSharpMethodAsync()">Call a Static C# Method with Manual Marshal (See browser console)</button></div>
+<div><button type="button" onclick="MarshalFunctionToStaticCSharpMethodAsync()">Marshal A Function to C# Method (See browser console)</button></div>
 
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await JSHost.ImportAsync("MyModule", "/js/JavaScriptModule.js");
+        await JavaScriptModule.ImportModuleAsync();
     }
 
     public void CallCSharpMethodByReference()

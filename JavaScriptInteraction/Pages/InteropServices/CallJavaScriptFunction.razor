@@ -19,8 +19,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await JSHost.ImportAsync("MyModule", "/js/JavaScriptModule.js");
-        await JSHost.ImportAsync("Collocated Module", "../Pages/InteropServices/CallJavaScriptFunction.razor.js");
+        await JavaScriptModule.ImportModuleAsync();
+        await ImportModuleAsync();
     }
 
     public void CallJSModuleFunction()
