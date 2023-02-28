@@ -10,14 +10,16 @@
 <div><button type="button" @onclick="CallPredictableFunction">Call Predictable Result Function</button> The call result is: @PredictableResult</div>
 <div><button type="button" @onclick="CallUnpredictableFunction">Call Unpredictable Result Function (Not possible)</button> The call result is: @UnpredictableResult</div>
 <div><button type="button" @onclick="CallFunctionWithReturnedObject">Call Function with Returned Object</button> A received property from the object: @ExampleObjectExampleString</div>
+<div><button type="button" @onclick="CallFunctionWithReturnedPrimitiveData">Call Function with Returned Primitive Data</button> A received data: @ExamplePrimitiveData</div>
 <div><button type="button" @onclick="PassPrimitiveDataToFunctionAutoMarshalling">Pass Primitive Parameters to Function (Auto marshalling)</button></div>
 <div><button type="button" @onclick="PassPrimitiveDataToFunctionMarshalManually">Pass Primitive Parameters to Function (Marshal manually)</button></div>
 <div><button type="button" @onclick="PassCSharpMethodToFunction">Pass a C# Method to Function</button></div>
 
 @code {
     public string PredictableResult { get; set; } = "";
-    public string ExampleObjectExampleString { get; set; } = "";
     public string UnpredictableResult { get; set; } = "";
+    public string ExampleObjectExampleString { get; set; } = "";
+    public long ExamplePrimitiveData { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,8 +54,13 @@
 
     public void CallFunctionWithReturnedObject()
     {
-        var receivedObject = JavaScriptModule.FunctionWithReturnedObject();
+        var receivedObject = JavaScriptModule.AutoMarshallingReturnedValue();
         ExampleObjectExampleString = receivedObject.GetPropertyAsString("exampleString") ?? "";
+    }
+
+    public void CallFunctionWithReturnedPrimitiveData()
+    {
+        ExamplePrimitiveData = JavaScriptModule.ManuallyMarshalReturnValue();
     }
 
     public void PassPrimitiveDataToFunctionAutoMarshalling()

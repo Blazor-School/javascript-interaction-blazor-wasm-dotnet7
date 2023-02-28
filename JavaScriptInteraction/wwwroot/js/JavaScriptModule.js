@@ -36,6 +36,11 @@ export function FunctionWithReturnedObject()
     return exampleObject;
 }
 
+export function FunctionWithReturnedPrimaryData()
+{
+    return 2023;
+}
+
 export function FunctionWithPrimitiveParameters(stringData, numberData, dateTimeData)
 {
     alert(`Received: string ${stringData}, number ${numberData}, date time ${dateTimeData}`);
@@ -63,14 +68,14 @@ export async function CallAsynchronousCSharpMethod(csharpObject)
 
 export function CallPrimitiveParameterizedCSharpMethod(csharpObject)
 {
-    csharpObject.invokeMethodAsync("MethodWithPrimitiveParameters", "Blazor School", 100, new Date());
+    csharpObject.invokeMethodAsync("MethodWithPrimitiveParameters", "Blazor School", 2023, new Date());
 }
 
 export function CallReferenceParameterizedCSharpMethod(csharpObject)
 {
     let passingObject = {
         exampleString: "Blazor School",
-        exampleInt: 9000,
+        exampleInt: 2023,
         exampleDate: new Date()
     };
 

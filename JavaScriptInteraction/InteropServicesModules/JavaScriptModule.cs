@@ -22,7 +22,11 @@ public partial class JavaScriptModule
     public static partial string UnpredictableFunction();
 
     [JSImport("FunctionWithReturnedObject", "MyModule")]
-    public static partial JSObject FunctionWithReturnedObject();
+    public static partial JSObject AutoMarshallingReturnedValue();
+
+    [JSImport("FunctionWithReturnedPrimaryData", "MyModule")]
+    [return: JSMarshalAs<JSType.Number>]
+    public static partial long ManuallyMarshalReturnValue();
 
     [JSImport("FunctionWithAutoMarshallingParameters", "MyModule")]
     public static partial string AutoMarshallingFunctionWithPrimitiveParameters(string param1, int param2, bool param3);
