@@ -25,6 +25,17 @@ export function UnpredictableFunction()
     return;
 }
 
+export function FunctionWithReturnedObject()
+{
+    let exampleObject = {
+        exampleString: "Blazor School",
+        exampleInt: 9000,
+        exampleDate: new Date()
+    };
+
+    return exampleObject;
+}
+
 export function FunctionWithPrimitiveParameters(stringData, numberData, dateTimeData)
 {
     alert(`Received: string ${stringData}, number ${numberData}, date time ${dateTimeData}`);
